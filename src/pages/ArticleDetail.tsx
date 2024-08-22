@@ -20,7 +20,7 @@ const ArticleDetail: React.FC = () => {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                await axiosInstance.post(`/article/article/${articleId}`);
+                await axiosInstance.get(`/article/article/${articleId}`);
                 // const response = await axiosInstance.get(`/article/article/${articleId}`);
                 //setArticle(response.data);
             } catch (err) {
@@ -38,7 +38,7 @@ const ArticleDetail: React.FC = () => {
 
         const fetchComments = async () => {
             try {
-                const response = await axiosInstance.get(`/comment/article/${articleId}`);
+                const response = await axiosInstance.get(`/api/comment/article/${articleId}`);
                 setComments(response.data);
                 setLoading(false);
             } catch (err) {
@@ -57,13 +57,13 @@ const ArticleDetail: React.FC = () => {
 
     const handleAddComment = async (text: string) => {
         try {
-            const response = await axiosInstance.post('/comment', {
+            const response = await axiosInstance.post('/api/comment', {
                 content: text,
                 articleId: article?.id,
-                memberId: 1, // 예시로 회원 ID를 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 ID를 사용해야 합니다.
-                memberNickname: 'User', // 예시로 사용자 이름을 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 이름을 사용해야 합니다.
-                profileImageURL: 'https://via.placeholder.com/50', // 예시로 사용자 이미지 URL을 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 이미지 URL을 사용해야 합니다.
-                timestamp: new Date().toISOString(), // 예시로 현재 시간을 사용합니다.
+                // memberId: 1, // 예시로 회원 ID를 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 ID를 사용해야 합니다.
+                // memberNickname: 'User', // 예시로 사용자 이름을 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 이름을 사용해야 합니다.
+                // profileImageURL: 'https://via.placeholder.com/50', // 예시로 사용자 이미지 URL을 하드코딩합니다. 실제 구현에서는 현재 로그인한 사용자의 이미지 URL을 사용해야 합니다.
+                // timestamp: new Date().toISOString(), // 예시로 현재 시간을 사용합니다.
             });
             setComments([...comments, response.data]);
         } catch (err) {
@@ -130,10 +130,8 @@ const ArticleDetail: React.FC = () => {
                         <hr/>
                         <img src={article.imgUrls[0] || 'https://via.placeholder.com/150'} alt={article.title}
                              style={{width: '100%', height: 'auto', maxHeight: '200rem' , marginBottom: `1rem`}}/>
-                        <Typography paragraph sx={{ whiteSpace: 'pre-line' }}>
-                            <div style={{ color: '#91bad3', fontSize: '1.2rem' }}>
-                                {formatContent(article.content)}
-                            </div>
+                        <Typography sx={{ color: '#91bad3', fontSize: '1.2rem', whiteSpace: 'pre-line' }}>
+                            {formatContent(article.content)}
                         </Typography>
                     </Paper>
                 </Grid>
@@ -143,7 +141,8 @@ const ArticleDetail: React.FC = () => {
                     </Button>
                 </Grid>
                 <Grid item xs={12} md={9}>
-                    {loading ? <p>Loading comments...</p> : <Comments comments={comments} onAddComment={handleAddComment} />}
+                    {loading ? <p>Loading
+                        ...</p> : <Comments comments={comments} onAddComment={handleAddComment} />}
                 </Grid>
                 <Grid item xs={12} md={3} sx={{ position: 'relative', top: '-100px' }}>
                     <MostHotArticles />
